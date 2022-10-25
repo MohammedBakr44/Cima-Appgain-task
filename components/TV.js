@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, FlatList, Image } from 'react-native';
-import useConfiguration from '../utils/useConfiguration';
+import useConfiguration from '../hooks/useConfiguration';
 import { API_KEY } from '@env';
 const TV = ({ series }) => {
     const [imageUrl, images] = useConfiguration();
