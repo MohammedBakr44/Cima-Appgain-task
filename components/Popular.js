@@ -1,13 +1,15 @@
 import { Text, View, ScrollView, Image, TouchableHighlight } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import useConfiguration from '../hooks/useConfiguration';
 import { API_KEY } from '@env';
 import Movie from './Movie';
 import TV from './TV';
+import * as SplashScreen from 'expo-splash-screen';
 const Popular = ({ nav }) => {
     const [popularMovies, setPopularMovies] = useState([]);
     const [popularTV, setPopularTV] = useState([]);
     const [imageUrl, images] = useConfiguration();
+    const [loading, setLoading] = useState(true);
     const getPopularMovies = async () => {
         try {
             const res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`);
@@ -27,14 +29,28 @@ const Popular = ({ nav }) => {
         let ignoreRequest = false;
         // ignoreRequest is used to prevent the effect from being run twice, the cleanup changes ignoreRequest to true which leads to ignoring the code block
         if (!ignoreRequest) {
-            getPopularMovies().then(data => setPopularMovies(data));
+            getPopularMovies().then(data => {
+                setPopularMovies(data);
+                setLoading(false);
+            });
             getPopularTV().then(data => setPopularTV(data));
         }
         return () => ignoreRequest = true;
 
     }, []);
+    const onLayoutRootView = useCallback(async () => {
+        if (!loading) {
+            // This tells the splash screen to hide immediately! If we call this after
+            // `setAppIsReady`, then we may see a blank screen while the app is
+            // loading its initial state and rendering its first pixels. So instead,
+            // we hide the splash screen once we know the root view has already
+            // performed layout.
+            await SplashScreen.hideAsync();
+        }
+    }, [loading]);
+
     return (
-        <View className="m-2">
+        <View className="m-2" onLayout={onLayoutRootView}>
             <View>
                 {popularMovies[0] && <Image resizeMode="cover" className="rounded w-max mt-10 h-52" source={{ uri: `${imageUrl}original${popularMovies[0]['backdrop_path']}` }} />}
             </View>

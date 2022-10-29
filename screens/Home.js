@@ -1,16 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, ScrollView } from 'react-native';
+import { Text, View, ScrollView, Button } from 'react-native';
 import Popular from '../components/Popular';
-import { movieContext } from '../components/Popular';
+import * as Linking from 'expo-linking';
 const Home = ({ navigation }) => {
+    const [link, setLink] = useState('');
     const nav = res => {
         if (res.title) {
-            navigation.navigate('Movie', { name: res.title, id: res.id });
+            navigation.navigate('Movie', { id: res.id });
         } else {
-            navigation.navigate('TV', { name: res.name, id: res.id });
+            navigation.navigate('TV', { id: res.id });
         }
     }
+
     return (
         <View className="flex-1 items-center justify-center bg-white">
             <ScrollView>

@@ -20,14 +20,13 @@ const MovieDetails = ({ id }) => {
             const res = await fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${API_KEY}&language=en-US`);
             const data = await res.json();
             return await data.cast;
-
         } catch (err) { console.log(err) }
     }
 
     useEffect(() => {
         let ignoreRequest = false;
         // ignoreRequest is used to prevent the effect from being run twice, the cleanup changes ignoreRequest to true which leads to ignoring the code block
-        if (!ignoreRequest) {
+        if (!ignoreRequest && id) {
             getMovie().then(data => {
                 setMovie(data);
                 setGenresState([]);
@@ -40,9 +39,10 @@ const MovieDetails = ({ id }) => {
         }
         return () => ignoreRequest = true;
 
-    }, []);
-    console.log(genresState);
+    }, [id]);
+    console.log(movie);
     return (
+        id &&
         <View>
             <View>
                 <Image source={{
@@ -50,7 +50,7 @@ const MovieDetails = ({ id }) => {
                 }} className="w-screen h-52" />
                 {/*  */}
                 <View className="absolute z-10 flex p-2 flex-col flex-wrap justify-end w-full h-full">
-                    <Text className="text-white mx-1 text-xl font-bold">{movie.title}</Text>
+                    <Text className="text-white mx-1 text-xl font-bold w-3/4">{movie.title}</Text>
                     <Text className="text-white mx-1 basis-1/7">{genresState.join(', ')} - {movie.runtime}min</Text>
                     <Text className="text-white mb-2 mx-1">Language: {movie['original_language']}</Text>
                 </View>
@@ -66,7 +66,7 @@ const MovieDetails = ({ id }) => {
                 <View className="p-2 mt-1">
                     <Text className="text-l font-bold mb-2">Cast</Text>
                     <View className="flex flex-row">
-                        {cast.map((actor, i) => (i < 6 && <View className="mx-4 w-20" key={actor.id}>
+                        {cast && cast.map((actor, i) => (i < 6 && <View className="mx-4 w-20" key={actor.id}>
                             <Image source={{
                                 uri: `${imageUrl}${images[0]}${actor['profile_path']}`
                             }} className="h-20 w-20 rounded-lg" />
@@ -76,6 +76,7 @@ const MovieDetails = ({ id }) => {
                     </View>
                 </View>
             </ScrollView>
+            <Text>{id}</Text>
         </View>
     )
 }

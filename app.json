@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "cima",
+    "name": "Cima",
     "slug": "cima",
     "owner": "mobakr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "cima",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -21,12 +22,19 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png"
-      }
+      },
+      "package": "com.mobakr.cima"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a4c00314-5e40-4609-a672-3e56eb016f32"
+      }
     }
   }
 }
